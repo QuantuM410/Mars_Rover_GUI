@@ -135,13 +135,18 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
 
 
     def APImage_fetcher(self) :
+        
+        self.pixmap = QPixmap("sources/loading-icegif.gif")
+        mainimagelabel.setPixmap(self.pixmap)
+        mainimagelabel.setScaledContents(True
+        )
         camera = self.combo_box.currentText()
         earth_date_object = self.dateedit.date()
         earth_date_python_object = earth_date_object.toPython()
         earth_date_param = earth_date_python_object.strftime('%Y-%m-%d')
         
         
-        to_be_deleted_files = glob.glob('/home/quantum410/Mars_rover_app/images/*') #to be used if used input image count from user
+        to_be_deleted_files = glob.glob('/home/quantum410/Mars_Rover_GUI/images/*') #to be used if used input image count from user
         for f in to_be_deleted_files:
             os.remove(f)
             print('deleted')
@@ -178,6 +183,7 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
                 self.pixmap = QPixmap("sources/HTML-404-Error-Page.png")
                 mainimagelabel.setPixmap(self.pixmap)
                 mainimagelabel.setScaledContents(True)
+                print("Image Not Found")
                 
 
 
@@ -309,44 +315,46 @@ class Mail(QMainWindow,QWidget) :
 
         pswd = "szeewngpejiwydjy"
 
+        try :
+            for person in tomail :
+                msg = MIMEMultipart()
+                msg['From'] = fromail.strip()
+                msg['To'] = person.strip()
+                msg['Subject'] = subjectdata
+                msg.attach(MIMEText(messagebody, 'plain'))
 
-        for person in tomail :
-            msg = MIMEMultipart()
-            msg['From'] = fromail.strip()
-            msg['To'] = person.strip()
-            msg['Subject'] = subjectdata
-            msg.attach(MIMEText(messagebody, 'plain'))
+                attachmentsloc = glob.glob('/home/quantum410/Mars_Rover_GUI/images/*')
 
-            attachmentsloc = glob.glob('/home/quantum410/Mars_rover_app/images/*')
+                for image in attachmentsloc :
+                    attachment = open(image, 'rb')
+                    attachment_package = MIMEBase('application', 'octet-stream')
+                    attachment_package.set_payload((attachment).read())
+                    encoders.encode_base64(attachment_package)
+                    attachment_package.add_header('Content-Disposition', 'attachment; filename= '+image)
+                    msg.attach(attachment_package)
 
-            for image in attachmentsloc :
-                attachment = open(image, 'rb')
-                attachment_package = MIMEBase('application', 'octet-stream')
-                attachment_package.set_payload((attachment).read())
-                encoders.encode_base64(attachment_package)
-                attachment_package.add_header('Content-Disposition', 'attachment; filename= '+image)
-                msg.attach(attachment_package)
+                    msgstr = msg.as_string()
 
-                msgstr = msg.as_string()
-
-            print('connecting to server ...')    
-            TIE_server = smtplib.SMTP(smtp_server,smtp_port)
-            TIE_server.starttls()
-            TIE_server.login(fromail, pswd)
-            print("succesfully connected to server")
-            print("sending mail")
-            TIE_server.sendmail(fromail.strip(), person.strip(), msgstr)
-            print("email sent")
-            self.mailsentdialog()
-        
-        TIE_server.quit()
+                print('connecting to server ...')    
+                TIE_server = smtplib.SMTP(smtp_server,smtp_port)
+                TIE_server.starttls()
+                TIE_server.login(fromail, pswd)
+                print("succesfully connected to server")
+                print("sending mail")
+                TIE_server.sendmail(fromail.strip(), person.strip(), msgstr)
+                print("email sent")
+                self.mailsentdialog()
+            
+            TIE_server.quit()
+        except Exception as e :
+            print(e)
 
     def mailsentdialog(self) :
-        msg = QMessageBox()
-        msg.setWindowTitle("Mars Rover Mail")
-        msg.setText("Mail Sent Successfully!")
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec_()
+        msgd = QMessageBox()
+        msgd.setWindowTitle("Mars Rover Mail")
+        msgd.setText("Mail Sent Successfully!")
+        msgd.setStandardButtons(QMessageBox.Ok)
+        msgd.exec_()
 
 
 
