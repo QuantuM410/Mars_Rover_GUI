@@ -80,11 +80,14 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
         self.Mail_Button.setStyleSheet('background-color: #01101f')
         #self.Mail_Button.setGeometry(250,400,100,40)
 
+        self.Reset_Button = QPushButton('Reset', self)
+        self.Reset_Button.setStyleSheet('background-color: #01101f')
 
         self.Fetch_Image_Button.clicked.connect(self.APImage_fetcher)
         self.Next_Push_Button.clicked.connect(self.next)
         self.Prev_Push_Button.clicked.connect(self.prev)
         self.Mail_Button.clicked.connect(self.mail)
+        self.Reset_Button.clicked.connect(self.reset)
 
         buttonlayout.addWidget(self.dateedit)
         buttonlayout.addWidget(self.combo_box)
@@ -93,6 +96,7 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
 
         prevnextlayout.addWidget(self.Prev_Push_Button)
         prevnextlayout.addWidget(self.Next_Push_Button)
+        prevnextlayout.addWidget(self.Reset_Button)
 
         global mainimagelabel
         mainimagelabel = QLabel(self)
@@ -138,11 +142,11 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
 
 
     def APImage_fetcher(self) :
-        loadinglabel = QLabel()
-        self.pixmap = QPixmap("sources/loading-icegif.gif")
-        loadinglabel.setPixmap(self.pixmap)
-        loadinglabel.setScaledContents(True)
-        imageonlyloadinglayout.addWidget(loadinglabel)
+        #loadinglabel = QLabel()
+        #self.pixmap = QPixmap("sources/loading-icegif.gif")
+        #loadinglabel.setPixmap(self.pixmap)
+        #loadinglabel.setScaledContents(True)
+        #imageonlyloadinglayout.addWidget(loadinglabel)
         
         camera = self.combo_box.currentText()
         earth_date_object = self.dateedit.date()
@@ -208,24 +212,6 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
         
         
 
-
-
-
-        
-        #parent_layout.addWidget(self.image_label)
-
-        #self.setCentralWidget(self.image_label)
-    # self.section_layout.addWidget(self.image_label)
-        
-        
-        
-        #self.image_label.setGeometry(300,100,400,400)
-        
-        #self.image_label.setGeometry()
-        
-                                                                                        
-
-
     def next(self) :
         global count
         count += 1
@@ -257,6 +243,19 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
         maillayout.addWidget(self.subject)
         self.window = Mail()
         self.window.show()
+    
+    def reset(self) :
+
+        to_be_deleted_files = glob.glob('/home/quantum410/Mars_Rover_GUI/images/*') 
+        for f in to_be_deleted_files:
+            os.remove(f)
+        
+        self.movie = QMovie("sources/image_processing20200606-21890-swfktj.gif")
+        mainimagelabel.setMovie(self.movie)
+        mainimagelabel.setScaledContents(True)
+        self.movie.start()
+        imageonlyloadinglayout.addWidget(mainimagelabel)
+
 
 class Mail(QMainWindow,QWidget) :
     def __init__(self):
@@ -359,6 +358,8 @@ class Mail(QMainWindow,QWidget) :
         msgd.setText("Mail Sent Successfully!")
         msgd.setStandardButtons(QMessageBox.Ok)
         msgd.exec_()
+
+
 
 
 
