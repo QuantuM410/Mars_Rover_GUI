@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QLabel, QComboBox, QHBoxLayout, QVBoxLayout, QLineEdit, QSizePolicy, QGridLayout, QTextEdit
+from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QLabel, QComboBox, QHBoxLayout, QVBoxLayout, QLineEdit, QSizePolicy, QGridLayout, QTextEdit, QMessageBox
 from PySide6.QtGui import QPixmap, QMovie, QIcon
 import PySide6.QtCore, PySide6.QtWidgets
 from PySide6.QtCore import QRect, Qt, QSize, QRunnable
@@ -337,16 +337,16 @@ class Mail(QMainWindow,QWidget) :
             print("sending mail")
             TIE_server.sendmail(fromail.strip(), person.strip(), msgstr)
             print("email sent")
+            self.mailsentdialog()
         
         TIE_server.quit()
 
     def mailsentdialog(self) :
-        self.window = Mailsent()
-        self.window.show()
-
-
-
-
+        msg = QMessageBox()
+        msg.setWindowTitle("Mars Rover Mail")
+        msg.setText("Mail Sent Successfully!")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
 
 
 
