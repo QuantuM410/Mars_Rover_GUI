@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QLabel, QComboBox, QHBoxLayout, QVBoxLayout, QLineEdit, QSizePolicy, QGridLayout, QTextEdit, QMessageBox
+from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton, QLabel, QComboBox, QHBoxLayout, QVBoxLayout, QLineEdit, QSizePolicy, QGridLayout, QTextEdit, QMessageBox, QStackedLayout
 from PySide6.QtGui import QPixmap, QMovie, QIcon
 import PySide6.QtCore, PySide6.QtWidgets
 from PySide6.QtCore import QRect, Qt, QSize, QRunnable
@@ -24,17 +24,20 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
     def __init__(self):
         super().__init__()
         self.setStyleSheet("background-color:#175776")
-        global multiparentlayout
+        self.setWindowIcon(QIcon("sources/icon.png"))
+
         global buttonimagelayout
+        global imageonlyloadinglayout
         mainlayout = QVBoxLayout()
         buttonimagelayout = QVBoxLayout()
         buttonlayout = QHBoxLayout()
         prevnextlayout = QHBoxLayout()
+        imageonlyloadinglayout = QStackedLayout()
         sideandmainlayout = QHBoxLayout()
         
 
         self.setFixedSize(800,600)
-        self.setWindowTitle("Mars Rover Image Extractor")
+        self.setWindowTitle("Martian Glimpse")
 
 
         self.dateedit = PySide6.QtWidgets.QDateEdit(calendarPopup=True)
@@ -67,10 +70,10 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
 
         
         self.Next_Push_Button = QPushButton('>>',self)
-        self.Next_Push_Button.setGeometry(150,400,100,40)
+        #self.Next_Push_Button.setGeometry(150,400,100,40)
         self.Next_Push_Button.setStyleSheet("background-color: #01101f")
         self.Prev_Push_Button = QPushButton('<<',self)   
-        self.Prev_Push_Button.setGeometry(50,400,100,40)
+        #self.Prev_Push_Button.setGeometry(50,400,100,40)
         self.Prev_Push_Button.setStyleSheet("background-color: #01101f")
 
         self.Mail_Button = QPushButton('Mail', self)
@@ -97,9 +100,10 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
         mainimagelabel.setMovie(self.movie)
         mainimagelabel.setScaledContents(True)
         self.movie.start()
+        imageonlyloadinglayout.addWidget(mainimagelabel)
 
         buttonimagelayout.addLayout(buttonlayout)
-        buttonimagelayout.addWidget(mainimagelabel)
+        buttonimagelayout.addLayout(imageonlyloadinglayout)
         buttonimagelayout.addLayout(prevnextlayout)
 
         sidebar = QLabel(self)
@@ -115,11 +119,10 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
         sideandmainlayout.addWidget(sidebar)
 
         topbarlabel = QLabel(self)
-        self.movie = QMovie("sources/mars_header_3_0.gif")
-        topbarlabel.setMovie(self.movie)
+        self.pixmap = QPixmap("sources/titlee.png")
+        topbarlabel.setPixmap(self.pixmap)
         topbarlabel.setScaledContents(True)
         topbarlabel.setFixedHeight(100)
-        self.movie.start()
 
         mainlayout.addWidget(topbarlabel)
         mainlayout.addLayout(sideandmainlayout)
@@ -135,11 +138,12 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
 
 
     def APImage_fetcher(self) :
-        
+        loadinglabel = QLabel()
         self.pixmap = QPixmap("sources/loading-icegif.gif")
-        mainimagelabel.setPixmap(self.pixmap)
-        mainimagelabel.setScaledContents(True
-        )
+        loadinglabel.setPixmap(self.pixmap)
+        loadinglabel.setScaledContents(True)
+        imageonlyloadinglayout.addWidget(loadinglabel)
+        
         camera = self.combo_box.currentText()
         earth_date_object = self.dateedit.date()
         earth_date_python_object = earth_date_object.toPython()
