@@ -39,7 +39,8 @@ python main.py
     
 ## GUI Preview
 
-![Preview](sources/Screencast from 11-02-23 02:40:29 PM IST.webm)
+https://user-images.githubusercontent.com/85943021/218250880-0c17fa5c-f221-4ee7-9103-31161aac75d8.mp4
+
 
 
 ## 🚀 About Me
