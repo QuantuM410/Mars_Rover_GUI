@@ -40,9 +40,10 @@ Create a .env file in the main directory and enter the credentials as
 ```
 api_key = {Your_API_KEY}
 fromail = {Your_Mail}
-pswd = {Your_Password}
+pswd = {Your_APP_Password}
 
 ```
+Your Mai should be the one you used to get the APP PASSWORD 
 Now you are good to GO!
 
 ## GUI Preview
