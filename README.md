@@ -49,6 +49,7 @@ Your Mail should be the one you used to generate the App password from GMAIL.
 NOTE :
 ```
 Dont use your gmail password, Generate an APP PASSWORD from you gmail account
+For sending mail to multiple recipients just separated their mails with a ',' [comma]
 ```
 Now you are good to go!
 
