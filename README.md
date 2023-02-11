@@ -32,7 +32,7 @@ or
 ```
 pip3 install -r requirements.txt
 ```
-To run the file just type 
+To run the GUI just type 
 ```bash
 python main.py
 ```
