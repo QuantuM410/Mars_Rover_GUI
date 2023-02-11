@@ -14,6 +14,7 @@ from PySide6.QtWidgets import QLabel, QWidget, QMainWindow
 from PySide6.QtGui import QPixmap
 
 from PySide6.QtGui import QCursor
+import threading
 
 
 
@@ -23,9 +24,10 @@ api_key = "tFjDsN6xmhOv3qddajpirPCa8kdoRVwjtUPOYILw"
 class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
     def __init__(self):
         super().__init__()
+
         self.setStyleSheet("background-color:#175776")
         self.setWindowIcon(QIcon("sources/icon.png"))
-
+        
         global buttonimagelayout
         global imageonlyloadinglayout
         mainlayout = QVBoxLayout()
@@ -42,7 +44,6 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
 
         self.dateedit = PySide6.QtWidgets.QDateEdit(calendarPopup=True)
         
-        #self.menuBar().setCornerWidget(self.dateedit, PySide6.QtCore.Qt.Corner.TopLeftCorner)
         self.dateedit.setDateTime(PySide6.QtCore.QDateTime.currentDateTime())
         self.dateedit.setStyleSheet('background-color:#01101f')
 
@@ -58,15 +59,15 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
         self.combo_box.addItem("MARDI")
         self.combo_box.addItem("NAVCAM")
         self.combo_box.setStyleSheet('background-color: #01101f')
-        #self.combo_box.setGeometry(150,130,100,30)
         
         global combo_box
         
         
         
-        self.Fetch_Image_Button = QPushButton('Fetch Images',self)
+        self.Fetch_Image_Button = QPushButton("Fetch",self)
         self.Fetch_Image_Button.setStyleSheet('''background-color: #01101f''')
-        #self.Fetch_Image_Button.setGeometry(150,250,100,40)
+ 
+    
 
         
         self.Next_Push_Button = QPushButton('>>',self)
@@ -83,7 +84,7 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
         self.Reset_Button = QPushButton('Reset', self)
         self.Reset_Button.setStyleSheet('background-color: #01101f')
 
-        self.Fetch_Image_Button.clicked.connect(self.APImage_fetcher)
+        self.Fetch_Image_Button.clicked.connect(self.threading)
         self.Next_Push_Button.clicked.connect(self.next)
         self.Prev_Push_Button.clicked.connect(self.prev)
         self.Mail_Button.clicked.connect(self.mail)
@@ -142,12 +143,7 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
 
 
     def APImage_fetcher(self) :
-        #loadinglabel = QLabel()
-        #self.pixmap = QPixmap("sources/loading-icegif.gif")
-        #loadinglabel.setPixmap(self.pixmap)
-        #loadinglabel.setScaledContents(True)
-        #imageonlyloadinglayout.addWidget(loadinglabel)
-        
+
         camera = self.combo_box.currentText()
         earth_date_object = self.dateedit.date()
         earth_date_python_object = earth_date_object.toPython()
@@ -192,6 +188,7 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
                 mainimagelabel.setPixmap(self.pixmap)
                 mainimagelabel.setScaledContents(True)
                 print("Image Not Found")
+                self.imagenotfounddialog()
                 
 
 
@@ -199,7 +196,12 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
             
         except Exception as e :
             print(e)
+    
 
+    def threading(self):
+        thread = threading.Thread(target=self.APImage_fetcher)
+        thread.start()
+    
     def initUI(self):       
 
         #self.image_label.setGeometry(QRect(110,50,100,100))
@@ -255,6 +257,14 @@ class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
         mainimagelabel.setScaledContents(True)
         self.movie.start()
         imageonlyloadinglayout.addWidget(mainimagelabel)
+
+    def imagenotfounddialog(self):
+
+        msgd = QMessageBox()
+        msgd.setWindowTitle("Mars Rover Mail")
+        msgd.setText("Image Not Found")
+        msgd.setStandardButtons(QMessageBox.Close)
+        msgd.exec_()
 
 
 class Mail(QMainWindow,QWidget) :
@@ -350,7 +360,9 @@ class Mail(QMainWindow,QWidget) :
             
             TIE_server.quit()
         except Exception as e :
+
             print(e)
+            self.errordialog()
 
     def mailsentdialog(self) :
         msgd = QMessageBox()
@@ -359,7 +371,12 @@ class Mail(QMainWindow,QWidget) :
         msgd.setStandardButtons(QMessageBox.Ok)
         msgd.exec_()
 
-
+    def errordialog(self):
+        msgd = QMessageBox()
+        msgd.setWindowTitle("Mars Rover Mail")
+        msgd.setText("No Image for attachments")
+        msgd.setStandardButtons(QMessageBox.Close)
+        msgd.exec_()
 
 
 
