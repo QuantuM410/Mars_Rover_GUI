@@ -8,6 +8,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
+from dotenv import load_dotenv
 import requests
 import urllib.request
 from PySide6.QtWidgets import QLabel, QWidget, QMainWindow
@@ -15,10 +16,7 @@ from PySide6.QtGui import QPixmap
 
 from PySide6.QtGui import QCursor
 import threading
-
-
-
-api_key = "tFjDsN6xmhOv3qddajpirPCa8kdoRVwjtUPOYILw"
+load_dotenv()
 
 
 class Mars_Image_Extrator_Widget(QMainWindow,QWidget,QRunnable) :
@@ -319,14 +317,14 @@ class Mail(QMainWindow,QWidget) :
         
         smtp_port = 587
         smtp_server = "smtp.gmail.com"
-        fromail = "kartikeys410@gmail.com"
+        fromail = os.getenv('fromail')
         tomail = self.touser.text()
         tomail = tomail.split(",")
         subjectdata = self.subject.text()
         messagebody = self.message.toPlainText()
 
 
-        pswd = "szeewngpejiwydjy"
+        pswd = os.getenv('pswd')
 
         try :
             for person in tomail :
