@@ -43,8 +43,14 @@ fromail = {Your_Mail}
 pswd = {Your_APP_Password}
 
 ```
-Your Mai should be the one you used to get the APP PASSWORD 
-Now you are good to GO!
+
+Your Mail should be the one you used to generate the App password from GMAIL. 
+
+NOTE :
+```
+Dont use your gmail password, Generate an APP PASSWORD from you gmail account
+```
+Now you are good to go!
 
 ## GUI Preview
 
