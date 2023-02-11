@@ -36,7 +36,15 @@ To run the file just type
 ```bash
 python main.py
 ```
-    
+Create a .env file in the main directory and enter the credentials as 
+```
+api_key = {Your_API_KEY}
+fromail = {Your_Mail}
+pswd = {Your_Password}
+
+```
+Now you are good to GO!
+
 ## GUI Preview
 
 https://user-images.githubusercontent.com/85943021/218250880-0c17fa5c-f221-4ee7-9103-31161aac75d8.mp4
